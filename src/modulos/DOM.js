@@ -1,8 +1,7 @@
 
 // src/DOM.js
 class DOMHandler {
-    static initialize(manager) {
-        
+    static initialize(manager) {       
         const app = document.getElementById('app');
         
         const title = document.createElement('h1');
@@ -33,6 +32,21 @@ class DOMHandler {
         app.appendChild(projectList);
         
         manager.getProjects().forEach(project => this.renderProject(project, manager));
+
+        const dialog_proj = document.getElementById("project-dialog");
+        const form_proj = document.getElementById("project-form");
+        const input_name_proj = document.getElementById("input-project-name");
+        const input_form_id_proj = document.getElementById("project-form-id");
+        
+        form_proj.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const newName = input_name_proj.value;
+            const project_id = input_form_id_proj.value;
+            if (newName && project_id) {
+                manager.editProject(project_id, newName);
+                dialog_proj.close();
+            }
+        });
     }
 
     static renderProject(project, manager) {
@@ -43,10 +57,7 @@ class DOMHandler {
         
         const editButton = document.createElement('button');
         editButton.textContent = 'Editar';
-        editButton.onclick = () => {
-            const newName = prompt('Novo nome:', project.name);
-            if (newName) manager.editProject(project.id, newName);
-        };
+        editButton.onclick = () => this.openEditDialog(project);
         
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Excluir';
@@ -55,6 +66,22 @@ class DOMHandler {
         li.appendChild(editButton);
         li.appendChild(deleteButton);
         projectList.appendChild(li);
+    }
+    static openEditDialog(project) {
+        const dialog = document.getElementById("project-dialog");
+        const input_name = document.getElementById("input-project-name");
+        const input_id = document.getElementById("project-form-id");
+        const cancel = document.getElementById("cancelar-projeto");
+        input_name.value = project.name;
+        input_id.value = project.id.toString();
+
+        dialog.showModal();
+
+        cancel.addEventListener("click", () => {
+            dialog.close();
+        })
+        
+        
     }
 
     static removeProject(id) {
@@ -69,10 +96,7 @@ class DOMHandler {
             
             const editButton = document.createElement('button');
             editButton.textContent = 'Editar';
-            editButton.onclick = () => {
-                const newName = prompt('Novo nome:', project.name);
-                if (newName) manager.editProject(project.id, newName);
-            };
+            editButton.onclick = () => this.openEditDialog(project);
     
             const deleteButton = document.createElement('button');
             deleteButton.textContent = 'Excluir';

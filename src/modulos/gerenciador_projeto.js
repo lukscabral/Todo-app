@@ -6,6 +6,7 @@ import DOMHandler from './DOM.js';
 class ProjectManager {
     constructor() {
         this.projects = Storage.load();
+        DOMHandler.initialize(this);
     }
 
     addProject(name) {
@@ -26,7 +27,7 @@ class ProjectManager {
     }
 
     editProject(id, newName) {
-        const project = this.projects.find(proj => proj.id === id);
+        const project = this.projects.find(proj => proj.id === Number(id));
         if (project) {
             project.name = newName;
             Storage.save(this.projects);
@@ -41,9 +42,6 @@ class ProjectManager {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const manager = new ProjectManager();
-    DOMHandler.initialize(manager);
-});
+
 
 export default ProjectManager;
