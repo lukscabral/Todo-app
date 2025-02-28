@@ -11,8 +11,3 @@ class Storage {
 }
 
 export default Storage;
-
-/*function loadProjects() {
-    const projects = localStorage.getItem("projects");
-    return projects ? JSON.parse(projects) : [];
-}*/

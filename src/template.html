@@ -7,12 +7,27 @@
     <title>Lista de tarefas</title>
 </head>
 <body>
-    <dialog id="project-dialog">
-        <form method="dialog" id="project-form">
-            <input type="hidden" name="project-form-id" id="project-form-id">
-            <label for="input-project-name">Nome do Projeto</label>
-            <input type="text" id="input-project-name" name="project-name">
-            <button id="project-submit" type="submit">Submit</button>
+    <div>
+        <button id="criar">Criar projeto</button>
+    </div>
+
+    <dialog id="project-create-dialog">
+        <form method="dialog" id="project-create-form">
+            <label for="input-project-create">Nome do novo projeto</label>
+            <input type="text" id="input-project-create-name" name="input-project-create">
+            <button id="project-create-submit" type="submit">Submit</button>
+            <button id="cancelar-projeto-create" type="button">Cancel</button>
+        </form>
+    </dialog>
+
+
+
+    <dialog id="project-edit-dialog">
+        <form method="dialog" id="project-edit-form">
+            <input type="hidden" name="project-edit-form-id" id="project-edit-form-id">
+            <label for="input-project-edit-name">Nome do Projeto</label>
+            <input type="text" id="input-project-edit-name" name="input-project-edit-name">
+            <button id="project-edit-submit" type="submit">Submit</button>
             <button id="cancelar-projeto" type="button">Cancel</button>
         </form>
     </dialog>
