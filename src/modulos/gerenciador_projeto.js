@@ -13,7 +13,8 @@ class ProjectManager {
         const newProject = {
             id: Date.now(),
             name,
-            createdAt: format(new Date(), 'yyyy-MM-dd HH:mm:ss')
+            createdAt: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+            tasks:[]
         };
         this.projects.push(newProject);
         Storage.save(this.projects);
@@ -35,13 +36,51 @@ class ProjectManager {
         } else {
             console.error("Projeto não encontrado!");
         }
-    
     }
+    
     getProjects() {
         return this.projects;
     }
+
+    addTaskToProject(project_id,task_name){
+        const project = this.projects.find(project => project.id === project_id);
+        if(project){
+            const new_task = {
+                id: Date.now(),
+                name: task_name,
+                createdAt: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
+                completed: false
+            };
+            project.tasks.push(new_task);
+            Storage.save(this.projects);
+            DOMHandler.renderTask(new_task, project_id, this);
+            return new_task;
+        }
+        return null;
+    }
+
+    deleteTaskFromProject(project_id, task_id) {
+        const project = this.projects.find(project => project.id === project_id);
+        if(project){
+            project.tasks = project.tasks.filter(task => task.id !== task_id);
+            Storage.save(this.projects);
+            DOMHandler.removeTask(task_id);
+        }
+    }
+
+    editTaskFromProject(project_id,task_id, new_task){
+        const project = this.projects.find(project => project.id === project_id);
+        if(project){
+            const taskIndex = project.tasks.findIndex(task => task.id === task_id);
+            if(taskIndex !== -1){
+                project.tasks[taskIndex] = { ...project.tasks[taskIndex], ...new_task };
+                Storage.save(this.projects);
+                DOMHandler.updateTask(project, project.tasks[taskIndex], this);
+                return true;
+            }
+        }
+        return false;
+    }
 }
-
-
 
 export default ProjectManager;

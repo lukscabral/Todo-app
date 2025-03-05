@@ -10,7 +10,7 @@
     <div>
         <button id="criar">Criar projeto</button>
     </div>
-
+    
     <dialog id="project-create-dialog">
         <form method="dialog" id="project-create-form">
             <label for="input-project-create">Nome do novo projeto</label>
@@ -19,8 +19,6 @@
             <button id="cancelar-projeto-create" type="button">Cancel</button>
         </form>
     </dialog>
-
-
 
     <dialog id="project-edit-dialog">
         <form method="dialog" id="project-edit-form">
@@ -31,8 +29,27 @@
             <button id="cancelar-projeto" type="button">Cancel</button>
         </form>
     </dialog>
-    <div id="app">
-        
-    </div>
+
+    <dialog id="task-create-dialog">
+        <form>
+            <label for="input-task-create-name">Nome da tarefa:</label>
+            <input type="text" name="input-task-create-name" id="input-task-create-name">
+            <button type="button" id="cancelar-tarefa">Cancelar</button>
+            <button type="button" id="confirmar-tarefa">Confirmar</button>
+        </form>
+    </dialog>
+
+    <dialog id="task-edit-dialog">
+        <form method="dialog" id="task-edit-form">
+            <input type="hidden" name="task-edit-form-id" id="task-edit-form-id">
+            <label for="input-task-edit-name">Nome da tarefa:</label>
+            <input type="text" name="input-task-edit-name" id="input-task-edit-name">
+            <button type="button" id="cancelar-tarefa-edit">Cancelar</button>
+            <button type="submit" id="confirmar-tarefa-edit">Confirmar</button>
+        </form>
+    </dialog>
+
+    <div id="app"></div>
+    <div id="task"></div>
 </body>
 </html>

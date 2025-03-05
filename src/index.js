@@ -6,8 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     new ProjectManager();
 });
 
-// refatorar index para os botoes abrirem modais ok
-//ou seja: remover o form de add projeto do js ok
-//criar novo dialog para criar tasks invocadas direto de projeto ja existente
-// resetar dialog apos submit
-//usar html mesmo e nao js pra layout
+//renderizar tasks ao carregar
+//consertar botoes do projeto apos update nao mostram addtask
+//add botao para abrir projeto e mostrar tasks
+//add descriçao e vencimento as tasks
+
+
