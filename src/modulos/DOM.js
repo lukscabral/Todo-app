@@ -22,7 +22,6 @@ class DOMHandler {
         app.appendChild(projectList);
         
         manager.getProjects().forEach(project => this.renderProject(project, manager));
-        // colocar um segundo loop pra renderizar os tasks ao iniciar?
 
         const dialog_proj = document.getElementById("project-edit-dialog");
         const form_proj = document.getElementById("project-edit-form");
@@ -58,8 +57,9 @@ class DOMHandler {
     static renderProject(project, manager) {
         const projectList = document.getElementById('project-list');
         const li = document.createElement('li');
+
         li.id = `project-${project.id}`;
-        li.textContent = `${project.name} (Criado em: ${project.createdAt})`;
+        li.textContent = `Projeto: ${project.name} (Criado em: ${project.createdAt})`;
         
         const addTaskButton = document.createElement("button");
         addTaskButton.textContent = "Adicionar tarefa";
@@ -75,11 +75,24 @@ class DOMHandler {
         
         const taskList = document.createElement("ul");
         taskList.id = `task-list-${project.id}`;
-        project.tasks.forEach(task => this.renderTask(task, project.id, manager));
+
+        const showButton = document.createElement("button");
+        showButton.textContent = "Mostrar tarefas";
+        showButton.onclick = () => {
+            const taskContainer = document.getElementById("task");
+            if (taskContainer) {
+                taskContainer.innerHTML = "";
+            
+                project.tasks.forEach(task => {
+                    this.renderTask(task, project.id, manager, taskContainer); 
+                });
+            }
+        };
 
         li.appendChild(addTaskButton);
         li.appendChild(editButton);
         li.appendChild(deleteButton);
+        li.appendChild(showButton);
         li.appendChild(taskList);
         projectList.appendChild(li);
     }
@@ -130,8 +143,12 @@ class DOMHandler {
         const projectElement = document.getElementById(`project-${project.id}`);
 
         if (projectElement) {
-            projectElement.textContent = `${project.name} (Criado em: ${project.createdAt})`;
-            
+            projectElement.textContent = `Projeto: ${project.name} (Criado em: ${project.createdAt})`;
+
+            const addTaskButton = document.createElement("button");
+            addTaskButton.textContent = "Adicionar tarefa";
+            addTaskButton.onclick = () => this.openTaskDialog(project.id);
+
             const editButton = document.createElement('button');
             editButton.textContent = 'Editar';
             editButton.onclick = () => this.openEditDialog(project);
@@ -139,19 +156,38 @@ class DOMHandler {
             const deleteButton = document.createElement('button');
             deleteButton.textContent = 'Excluir';
             deleteButton.onclick = () => manager.deleteProject(project.id);
-    
+            
+            const taskList = document.createElement("ul");
+            taskList.id = `task-list-${project.id}`;
+
+            const showButton = document.createElement("button");
+            showButton.textContent = "Mostrar tarefas";
+            showButton.onclick = () => {
+                const taskContainer = document.getElementById("task");
+                if (taskContainer) {
+                    taskContainer.innerHTML = "";
+               
+                    project.tasks.forEach(task => {
+                        this.renderTask(task, project.id, manager, taskContainer); 
+                    });
+                }
+            };
+
+            projectElement.appendChild(addTaskButton);
             projectElement.appendChild(editButton);
             projectElement.appendChild(deleteButton);
+            projectElement.appendChild(showButton);
+            projectElement.appendChild(taskList);
         }
     }
 
-    static renderTask(task, project_id, manager){
-        const taskdiv = document.getElementById("task");
+    static renderTask(task, project_id, manager, container){
         const taskList = document.getElementById(`task-list-${project_id}`);
+        
         if(taskList) {
             const li = document.createElement('li');
             li.id = `task-${task.id}`;
-            li.textContent = `${task.name} (Criado em: ${task.createdAt})`;
+            li.textContent = `Task - ${task.name} (Criado em: ${task.createdAt})`;
 
             const edit_btn = document.createElement('button');
             edit_btn.textContent = 'Editar';
@@ -163,10 +199,10 @@ class DOMHandler {
                 manager.deleteTaskFromProject(project_id, task.id);
                 this.removeTask(task.id);
             };
+
             li.appendChild(edit_btn);
             li.appendChild(del_btn);
-            taskdiv.appendChild(taskList);
-            taskList.appendChild(li);
+            container.appendChild(li);
         }
     }
 
@@ -177,6 +213,9 @@ class DOMHandler {
 
     static openTaskDialog(project_id){
         const dialog = document.getElementById("task-create-dialog");
+
+        dialog.dataset.projectId = project_id;
+
         dialog.showModal();
         const input_name = document.getElementById("input-task-create-name");
         const cancel = document.getElementById("cancelar-tarefa");
@@ -188,12 +227,20 @@ class DOMHandler {
 
         confirm.addEventListener("click", () => {
             const task_name = input_name.value;
+
             if(task_name) {
+
+                const project_id = Number(dialog.dataset.projectId);
                 const task = DOMHandler.manager.addTaskToProject(project_id, task_name);
+
                 if(task) {
                     input_name.value = "";
                     dialog.close();
+                } else {
+                console.error("A tarefa não foi criada.");
                 }
+            } else {
+                console.error("O nome da tarefa está vazio.");
             }
         });
     }
@@ -227,7 +274,7 @@ class DOMHandler {
         const taskElement = document.getElementById(`task-${task.id}`);
 
         if (taskElement){
-            taskElement.textContent = `${task.name} (criado em: ${task.createdAt})`;
+            taskElement.textContent = `Task - ${task.name} (criado em: ${task.createdAt})`;
 
             const edit_btn = document.createElement("button");
             edit_btn.textContent = "Editar";

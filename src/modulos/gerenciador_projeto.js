@@ -44,6 +44,7 @@ class ProjectManager {
 
     addTaskToProject(project_id,task_name){
         const project = this.projects.find(project => project.id === project_id);
+        //console.log("Projeto Encontrado:", project);
         if(project){
             const new_task = {
                 id: Date.now(),
@@ -54,9 +55,12 @@ class ProjectManager {
             project.tasks.push(new_task);
             Storage.save(this.projects);
             DOMHandler.renderTask(new_task, project_id, this);
+            //console.log("Tarefa Adicionada:", new_task);
             return new_task;
-        }
+        } else {
+            console.error("Projeto não encontrado.");
         return null;
+        }
     }
 
     deleteTaskFromProject(project_id, task_id) {
