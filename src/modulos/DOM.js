@@ -85,6 +85,7 @@ class DOMHandler {
             
                 project.tasks.forEach(task => {
                     this.renderTask(task, project.id, manager, taskContainer); 
+                    console.log(taskContainer);
                 });
             }
         };
@@ -187,7 +188,8 @@ class DOMHandler {
         if(taskList) {
             const li = document.createElement('li');
             li.id = `task-${task.id}`;
-            li.textContent = `Task - ${task.name} (Criado em: ${task.createdAt})`;
+            li.textContent = `Task - ${task.name} (Criado em: ${task.createdAt})
+                                Descriçao: ${task.descricao}`;
 
             const edit_btn = document.createElement('button');
             edit_btn.textContent = 'Editar';
@@ -202,6 +204,7 @@ class DOMHandler {
 
             li.appendChild(edit_btn);
             li.appendChild(del_btn);
+            
             container.appendChild(li);
         }
     }
@@ -218,6 +221,8 @@ class DOMHandler {
 
         dialog.showModal();
         const input_name = document.getElementById("input-task-create-name");
+        const input_descricao = document.getElementById("input-task-create-descricao");
+        const input_vencimento = document.getElementById("input-task-create-vencimento");
         const cancel = document.getElementById("cancelar-tarefa");
         const confirm = document.getElementById("confirmar-tarefa");
 
@@ -227,11 +232,13 @@ class DOMHandler {
 
         confirm.addEventListener("click", () => {
             const task_name = input_name.value;
+            const task_descricao = input_descricao.value;
+            const task_vencimento = input_vencimento.value;
 
             if(task_name) {
-
+                const taskContainer = document.getElementById("task");
                 const project_id = Number(dialog.dataset.projectId);
-                const task = DOMHandler.manager.addTaskToProject(project_id, task_name);
+                const task = DOMHandler.manager.addTaskToProject(project_id, task_name, task_descricao, task_vencimento,taskContainer);
 
                 if(task) {
                     input_name.value = "";

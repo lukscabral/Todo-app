@@ -42,20 +42,22 @@ class ProjectManager {
         return this.projects;
     }
 
-    addTaskToProject(project_id,task_name){
+    addTaskToProject(project_id,task_name,task_descricao,task_vencimento,taskContainer){
         const project = this.projects.find(project => project.id === project_id);
-        //console.log("Projeto Encontrado:", project);
+
         if(project){
             const new_task = {
                 id: Date.now(),
                 name: task_name,
+                descricao: task_descricao,
+                vencimento: task_vencimento,
                 createdAt: format(new Date(), 'yyyy-MM-dd HH:mm:ss'),
                 completed: false
             };
             project.tasks.push(new_task);
             Storage.save(this.projects);
-            DOMHandler.renderTask(new_task, project_id, this);
-            //console.log("Tarefa Adicionada:", new_task);
+            DOMHandler.renderTask(new_task, project_id, this,taskContainer);
+
             return new_task;
         } else {
             console.error("Projeto não encontrado.");
